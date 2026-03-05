@@ -1,0 +1,13 @@
+
+🛡️ NETMON PRO v3.4 - SECURITY ASSESSMENT REPORT
+Generated: 2026-02-18 13:17:54.774641
+Network: 192.168.100.0/24
+=======================================
+
+📊 SUMMARY:
+  Devices discovered: 1
+  Baseline devices: 1
+  Active anomalies: 1
+
+🚨 CRITICAL FINDINGS:
+  • 13:17:32 - NEW_DEVICE: 192.168.100.1 - Unknown device appeared

@@ -1,0 +1,1027 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R] /Count 9 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 2268 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(NETMON PRO v2.1) Tj
+0 -14 Td
+(Enterprise Network Security Audit) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Report Generated: 2026-03-05 11:50:46) Tj
+0 -14 Td
+(Total Assets Tracked: 70) Tj
+0 -14 Td
+(Live Assets Detected: 3) Tj
+0 -14 Td
+(Critical Assets Flagged: 1) Tj
+0 -14 Td
+(GRC Compliance Score: 72/100) Tj
+0 -14 Td
+(Overall Risk Level: MEDIUM) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset Intelligence Detail) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.41 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:03:56\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.49 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:02\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.66 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:16\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.80 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:28\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.89 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:34\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.90 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:35\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.96 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:37\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 2467 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.100.93 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:37\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.94 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:37\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.97 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-24 13:04:39\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.22 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-02-26 21:07:59\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: ) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.9 \(\)) Tj
+0 -14 Td
+(MAC: 5c:e4:2a:c4:96:b3 | Status: OFFLINE \(Last: 2026-02-26 22:03:46\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:03:46) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.34 \(\)) Tj
+0 -14 Td
+(MAC: 74:70:fd:48:44:5a | Status: OFFLINE \(Last: 2026-02-26 22:04:10\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:04:10) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.51 \(\)) Tj
+0 -14 Td
+(MAC: 1e:64:f4:83:8e:d0 | Status: OFFLINE \(Last: 2026-02-26 22:04:27\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:44:18) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.57 \(\)) Tj
+0 -14 Td
+(MAC: 12:1f:e5:c6:0f:29 | Status: OFFLINE \(Last: 2026-02-26 22:04:31\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:41:36) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.16 \(\)) Tj
+0 -14 Td
+(MAC: 66:7b:01:b4:b2:64 | Status: OFFLINE \(Last: 2026-02-26 22:40:25\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:40:57) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 2539 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.100.17 \(\)) Tj
+0 -14 Td
+(MAC: 8e:63:00:08:a5:23 | Status: OFFLINE \(Last: 2026-02-26 22:40:25\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:33:58) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.21 \(\)) Tj
+0 -14 Td
+(MAC: 0a:f1:99:16:63:f9 | Status: OFFLINE \(Last: 2026-02-26 22:40:28\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:34:02) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.35 \(\)) Tj
+0 -14 Td
+(MAC: 1e:f5:11:36:fd:5a | Status: OFFLINE \(Last: 2026-02-26 22:40:41\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:41:16) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.36 \(\)) Tj
+0 -14 Td
+(MAC: ba:47:10:56:98:bb | Status: OFFLINE \(Last: 2026-02-26 22:40:42\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:34:15) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.58 \(\)) Tj
+0 -14 Td
+(MAC: e2:d1:2a:bb:25:64 | Status: OFFLINE \(Last: 2026-02-26 22:41:07\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:04:32) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.0.1 \(\)) Tj
+0 -14 Td
+(MAC: 5c:e9:31:d2:ff:14 | Status: OFFLINE \(Last: 2026-02-28 14:38:12\)) Tj
+0 -14 Td
+(Hostname: _gateway | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-28 14:38:12) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.0.100 \(\)) Tj
+0 -14 Td
+(MAC: 80:47:86:56:65:7a | Status: OFFLINE \(Last: 2026-02-28 14:38:33\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-28 14:38:33) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.0.101 \(\)) Tj
+0 -14 Td
+(MAC: ee:06:a6:84:a7:e5 | Status: OFFLINE \(Last: 2026-02-28 14:38:34\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-28 14:38:24) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.0.104 \(\)) Tj
+0 -14 Td
+(MAC: 0e:0c:1a:3e:49:02 | Status: OFFLINE \(Last: 2026-02-28 14:38:34\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-28 14:38:30) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 2538 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.0.105 \(\)) Tj
+0 -14 Td
+(MAC: 62:0d:f5:8d:dd:b6 | Status: OFFLINE \(Last: 2026-02-28 14:38:35\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-28 14:38:31) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.0.113 \(\)) Tj
+0 -14 Td
+(MAC: 7c:5c:f8:4e:6f:15 | Status: OFFLINE \(Last: 2026-02-28 14:45:16\)) Tj
+0 -14 Td
+(Hostname: mac | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-28 14:38:31) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.31 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:15\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:15) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.77 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:54\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:54) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.78 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:55\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:55) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.82 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:58\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:58) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.83 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:58\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:58) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.84 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:58\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:58) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.85 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:03:58\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:58) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 13 0 R >>
+endobj
+13 0 obj
+<< /Length 2553 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.100.88 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 11:04:00\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:04:00) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.10 \(Marcaulay\)) Tj
+0 -14 Td
+(MAC: ca:83:9d:05:a7:83 | Status: OFFLINE \(Last: 2026-03-02 13:58:40\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:40:52) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.38 \(\)) Tj
+0 -14 Td
+(MAC: da:8d:48:0e:ea:ba | Status: OFFLINE \(Last: 2026-03-02 13:59:05\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:22) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.37 \(\)) Tj
+0 -14 Td
+(MAC: de:07:1d:13:95:56 | Status: OFFLINE \(Last: 2026-03-02 13:59:05\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:05) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.39 \(\)) Tj
+0 -14 Td
+(MAC: 0a:61:5e:7c:2d:e5 | Status: OFFLINE \(Last: 2026-03-02 13:59:06\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:22) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.40 \(\)) Tj
+0 -14 Td
+(MAC: 12:78:51:b7:62:2f | Status: OFFLINE \(Last: 2026-03-02 13:59:06\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:22) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.46 \(\)) Tj
+0 -14 Td
+(MAC: b2:9b:82:ad:70:01 | Status: OFFLINE \(Last: 2026-03-02 13:59:11\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:41:26) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.48 \(\)) Tj
+0 -14 Td
+(MAC: 6e:bb:f9:19:da:d3 | Status: OFFLINE \(Last: 2026-03-02 13:59:12\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:12) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.50 \(\)) Tj
+0 -14 Td
+(MAC: 9e:fb:dc:f0:c3:37 | Status: OFFLINE \(Last: 2026-03-02 13:59:14\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:14) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 15 0 R >>
+endobj
+15 0 obj
+<< /Length 2544 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.100.53 \(\)) Tj
+0 -14 Td
+(MAC: 5e:df:98:88:ce:ad | Status: OFFLINE \(Last: 2026-03-02 13:59:17\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:17) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.54 \(\)) Tj
+0 -14 Td
+(MAC: 68:83:cb:20:d6:5e | Status: OFFLINE \(Last: 2026-03-02 13:59:17\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:34) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.55 \(\)) Tj
+0 -14 Td
+(MAC: 28:c6:3f:97:c5:2a | Status: OFFLINE \(Last: 2026-03-02 13:59:18\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:44:21) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.56 \(\)) Tj
+0 -14 Td
+(MAC: 22:e4:23:2f:d1:63 | Status: OFFLINE \(Last: 2026-03-02 13:59:18\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:41:35) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.60 \(\)) Tj
+0 -14 Td
+(MAC: 48:51:b7:04:5f:79 | Status: OFFLINE \(Last: 2026-03-02 13:59:21\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:21) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.62 \(\)) Tj
+0 -14 Td
+(MAC: b8:76:3f:1b:16:de | Status: OFFLINE \(Last: 2026-03-02 13:59:22\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:22) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.63 \(\)) Tj
+0 -14 Td
+(MAC: 28:16:ad:b7:f6:5b | Status: OFFLINE \(Last: 2026-03-02 13:59:23\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:42) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.76 \(\)) Tj
+0 -14 Td
+(MAC: e0:d0:45:7b:25:82 | Status: OFFLINE \(Last: 2026-03-02 13:59:24\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:58:34) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.65 \(\)) Tj
+0 -14 Td
+(MAC: 5a:a9:fd:ec:a2:56 | Status: OFFLINE \(Last: 2026-03-02 13:59:25\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:25) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 17 0 R >>
+endobj
+17 0 obj
+<< /Length 2574 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.100.67 \(\)) Tj
+0 -14 Td
+(MAC: 6a:6f:60:4d:ea:4a | Status: OFFLINE \(Last: 2026-03-02 13:59:27\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:27) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.68 \(\)) Tj
+0 -14 Td
+(MAC: 74:70:fd:48:44:5a | Status: OFFLINE \(Last: 2026-03-02 13:59:27\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:27) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.69 \(\)) Tj
+0 -14 Td
+(MAC: 6e:8d:52:5d:e1:f8 | Status: OFFLINE \(Last: 2026-03-02 13:59:28\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:28) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.70 \(\)) Tj
+0 -14 Td
+(MAC: 12:e6:e2:fd:42:7b | Status: OFFLINE \(Last: 2026-03-02 13:59:28\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:28) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.45 \(\)) Tj
+0 -14 Td
+(MAC: f8:e4:e3:ff:6b:17 | Status: OFFLINE \(Last: 2026-03-02 13:59:28\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:26) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.72 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-02 13:59:29\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:29) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+([CRITICAL] Asset: 192.168.100.1 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: LIVE) Tj
+0 -14 Td
+(Hostname: _gateway | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 21:40:44) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+(Security Event Log \(Traffic\):) Tj
+0 -14 Td
+(  > 11:49:38 - DNS: api.flightproxy.skype.com) Tj
+0 -14 Td
+(  > 11:50:05 - DNS: main.vscode-cdn.net) Tj
+0 -14 Td
+(  > 11:50:19 - DNS: bam.nr-data.net) Tj
+0 -14 Td
+(  > 11:50:19 - DNS: 12.100.168.192.in-addr.arpa) Tj
+0 -14 Td
+(  > 11:50:39 - DNS: api.flightproxy.skype.com) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.11 \(\)) Tj
+0 -14 Td
+(MAC: 2a:9c:23:2a:e6:78 | Status: OFFLINE \(Last: 2026-03-05 11:28:34\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:58:40) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 19 0 R >>
+endobj
+19 0 obj
+<< /Length 2526 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 192.168.100.12 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: LIVE) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-05 11:28:35) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.13 \(\)) Tj
+0 -14 Td
+(MAC: e8:b1:fc:0b:9b:81 | Status: OFFLINE \(Last: 2026-03-05 11:28:40\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:02:58) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.15 \(\)) Tj
+0 -14 Td
+(MAC: 16:e0:f5:4c:77:8b | Status: OFFLINE \(Last: 2026-03-05 11:28:42\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-02-26 22:33:57) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.18 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-05 11:28:44\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-05 11:28:44) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.26 \(\)) Tj
+0 -14 Td
+(MAC: 7c:5c:f8:4e:6f:15 | Status: LIVE) Tj
+0 -14 Td
+(Hostname: mac | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:11) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+(Security Event Log \(Traffic\):) Tj
+0 -14 Td
+(  > 11:49:38 - DNS: api.flightproxy.skype.com) Tj
+0 -14 Td
+(  > 11:50:05 - DNS: main.vscode-cdn.net) Tj
+0 -14 Td
+(  > 11:50:19 - DNS: bam.nr-data.net) Tj
+0 -14 Td
+(  > 11:50:19 - DNS: 12.100.168.192.in-addr.arpa) Tj
+0 -14 Td
+(  > 11:50:39 - DNS: api.flightproxy.skype.com) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.44 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-05 11:29:15\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:25) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.61 \(\)) Tj
+0 -14 Td
+(MAC: 56:6f:35:6a:31:8c | Status: OFFLINE \(Last: 2026-03-05 11:29:40\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 13:59:22) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 192.168.100.64 \(\)) Tj
+0 -14 Td
+(MAC: 1c:bf:c0:90:1c:1d | Status: OFFLINE \(Last: 2026-03-05 11:29:49\)) Tj
+0 -14 Td
+(Hostname: Unknown | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-02 11:03:42) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 21 0 R >>
+endobj
+21 0 obj
+<< /Length 581 >>
+stream
+BT
+/F1 11 Tf
+1 0 0 1 40 800 Tm
+(Asset: 10.219.132.162 \(\)) Tj
+0 -14 Td
+(MAC: 7c:5c:f8:4e:6f:15 | Status: OFFLINE \(Last: 2026-03-05 11:42:34\)) Tj
+0 -14 Td
+(Hostname: mac | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-04 12:41:48) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+0 -14 Td
+(Asset: 10.219.132.171 \(\)) Tj
+0 -14 Td
+(MAC: ??:??:??:??:??:?? | Status: OFFLINE \(Last: 2026-03-05 11:42:42\)) Tj
+0 -14 Td
+(Hostname: _gateway | Vendor: Unknown) Tj
+0 -14 Td
+(First Discovery: 2026-03-04 12:41:56) Tj
+0 -14 Td
+(OS Fingerprint: Unknown) Tj
+0 -14 Td
+() Tj
+ET
+endstream
+endobj
+xref
+0 22
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000175 00000 n 
+0000000245 00000 n 
+0000000371 00000 n 
+0000002691 00000 n 
+0000002817 00000 n 
+0000005336 00000 n 
+0000005462 00000 n 
+0000008053 00000 n 
+0000008181 00000 n 
+0000010772 00000 n 
+0000010900 00000 n 
+0000013506 00000 n 
+0000013634 00000 n 
+0000016231 00000 n 
+0000016359 00000 n 
+0000018986 00000 n 
+0000019114 00000 n 
+0000021693 00000 n 
+0000021821 00000 n 
+trailer
+<< /Size 22 /Root 1 0 R >>
+startxref
+22454
+%%EOF

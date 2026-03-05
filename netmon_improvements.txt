@@ -1,0 +1,49 @@
+# NetMon Pro v2.1 Improvements & Roadmap
+
+## 1. Feature: Persistent Device Storage (SQLite)
+Currently, discovered devices are lost when the application is closed. Implementing an SQLite backend will allow for historical tracking of network changes.
+
+```python
+import sqlite3
+
+def init_db():
+    conn = sqlite3.connect('netmon_history.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS devices
+                 (ip TEXT PRIMARY KEY, mac TEXT, hostname TEXT, vendor TEXT, first_seen TEXT, last_seen TEXT)''')
+    conn.commit()
+    conn.close()
+```
+
+## 2. Feature: OS Fingerprinting (Nmap Integration)
+Enhance the "Deep Scan" functionality by detecting the Operating System of the target device.
+
+```python
+def detect_os(self, ip):
+    if NMAP_AVAILABLE:
+        nm = nmap.PortScanner()
+        nm.scan(ip, arguments='-O')
+        if 'osmatch' in nm[ip]:
+            return nm[ip]['osmatch'][0]['name']
+    return "Unknown"
+```
+
+## 3. Feature: Vulnerability Mapping
+Cross-reference open ports with common vulnerabilities.
+
+```python
+def check_vulns(self, port, service):
+    # Placeholder for vulnerability database lookup
+    vulns = {
+        21: "Potential FTP Anonymous Login",
+        23: "Insecure Telnet Protocol",
+        443: "Check for Heartbleed/SSL issues"
+    }
+    return vulns.get(port, "No immediate critical vulns known")
+```
+
+## 4. UI Enhancement: Real-time Traffic Graph
+Integrate Matplotlib to show a live graph of network throughput.
+
+## 5. Security Enhancement: Encrypted Exports
+Add the option to password-protect the exported CSV/JSON reports using a library like `cryptography`.

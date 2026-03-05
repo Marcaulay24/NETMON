@@ -1,0 +1,17 @@
+appearance:
+  theme: dark
+  accent: "#00d4ff"
+
+scan:
+  max_workers: 64
+  rate_limit_pps: 800
+  schedule_cron: "*/30 * * * *"
+
+api:
+  host: "127.0.0.1"
+  port: 8091
+  api_key: "change-me"
+
+db:
+  url: "sqlite:///netmon_modular.db"
+  wal_mode: true
