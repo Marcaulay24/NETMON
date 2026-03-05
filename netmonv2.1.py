@@ -347,12 +347,16 @@ class NetMonPro:
         
         # Set Window Icon
         try:
-            icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
+            # Use absolute path for reliability across different launch methods
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            icon_path = os.path.join(current_dir, "icon.png")
             if os.path.exists(icon_path):
                 self.icon_image = tk.PhotoImage(file=icon_path)
-                self.root.iconphoto(False, self.icon_image)
+                # True makes the icon apply to all subsequently created windows
+                self.root.iconphoto(True, self.icon_image)
         except Exception as e:
-            print(f"Failed to load icon: {e}")
+            # Print to stdout for debugging
+            print(f"Icon loading failed: {e}")
         
         # Data storage
         self.devices = {}
@@ -2628,7 +2632,8 @@ Open Ports:   {len(details.get('ports', {}))}
                 for line in lines:
                     text = self._safe_pdf_text(line)
                     if text:
-                        pdf.multi_cell(190, 6, text)
+                        pdf.set_x(pdf.l_margin)
+                        pdf.multi_cell(0, 6, text, align="L")
                     else:
                         pdf.ln(3)
                 pdf.output(path)
@@ -3092,7 +3097,7 @@ Open Ports:   {len(details.get('ports', {}))}
         self.log("🧹 All data and history cleared")
 
 def main():
-    root = tk.Tk()
+    root = tk.Tk(className="netmon-pro")
     app = NetMonPro(root)
     root.mainloop()
 

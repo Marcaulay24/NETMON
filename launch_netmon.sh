@@ -1,13 +1,22 @@
 #!/bin/bash
-# NETMON PRO v2.1 Launcher
-# Ensures the script runs with root privileges
+# 🛡️ NETMON PRO v2.1 Launcher - Robust GUI Edition
 
+# Get absolute path of the script directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
-# Try to use pkexec for a GUI sudo prompt, fallback to terminal sudo
-if command -v pkexec >/dev/null 2>&1; then
-    pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY python3 netmonv2.1.py
+# Ensure X11 environment is preserved
+export DISPLAY="${DISPLAY:-:0}"
+export XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+
+# Ask for password graphically
+PASSWORD=$(zenity --password --title="🛡️ NetMon PRO Security Authorization" --text="Enter sudo password to enable advanced monitoring:")
+
+if [ $? -eq 0 ] && [ -n "$PASSWORD" ]; then
+    # Launch with sudo -S (stdin) and -E (preserve env for GUI)
+    echo "$PASSWORD" | sudo -S -E python3 netmonv2.1.py
 else
-    x-terminal-emulator -e "sudo python3 netmonv2.1.py"
+    # User cancelled or empty password
+    zenity --error --text="Authorization failed or cancelled. Application cannot start without root privileges." --title="Error"
+    exit 1
 fi
