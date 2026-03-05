@@ -39,6 +39,12 @@ pip install -r requirements.txt
 
 ## 📖 How to Run
 
+### 🖥️ GUI Launcher (Desktop)
+1. **Enable the Desktop Icon:** Double-click the `NetMonPro.desktop` icon on your desktop.
+   - *Note: On Linux, you may need to right-click and select "Allow Launching" the first time.*
+2. **Launch with Root Privileges:** The application will prompt for your **sudo** password automatically to enable network monitoring features.
+
+### ⌨️ Terminal Launch
 1. **Launch the Application:**
    ```bash
    python netmonv2.1.py

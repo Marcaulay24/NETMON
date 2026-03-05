@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+netmon_history.db
+netmon_security_report_*.txt
+report.pdf
+venv/
+.pytest_cache/

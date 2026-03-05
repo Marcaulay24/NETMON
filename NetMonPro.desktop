@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=NetMon PRO v2.1
+Comment=Enterprise Network Security Suite
+Exec=/home/cyberlord/NETMON/launch_netmon.sh
+Icon=/home/cyberlord/NETMON/icon.png
+Terminal=false
+Categories=Network;Security;
+StartupNotify=true
+Path=/home/cyberlord/NETMON

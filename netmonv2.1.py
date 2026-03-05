@@ -345,6 +345,15 @@ class NetMonPro:
         self.root.minsize(1400, 900)
         self.root.configure(bg='#1e1e1e')
         
+        # Set Window Icon
+        try:
+            icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
+            if os.path.exists(icon_path):
+                self.icon_image = tk.PhotoImage(file=icon_path)
+                self.root.iconphoto(False, self.icon_image)
+        except Exception as e:
+            print(f"Failed to load icon: {e}")
+        
         # Data storage
         self.devices = {}
         self.device_details = {}
