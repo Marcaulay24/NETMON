@@ -17,7 +17,7 @@ class ModernSOCApp:
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
         self.root = ctk.CTk()
-        self.root.title("NETMON PRO v2.1 - Modern SOC")
+        self.root.title("NETMON PRO v2.2 - Modern SOC")
         self.root.geometry("1600x1000")
 
         self.top = ctk.CTkFrame(self.root, corner_radius=0)

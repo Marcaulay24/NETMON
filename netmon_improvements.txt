@@ -1,4 +1,4 @@
-# NetMon Pro v2.1 Improvements & Roadmap
+# NetMon Pro v2.2 Improvements & Roadmap
 
 ## 1. Feature: Persistent Device Storage (SQLite)
 Currently, discovered devices are lost when the application is closed. Implementing an SQLite backend will allow for historical tracking of network changes.

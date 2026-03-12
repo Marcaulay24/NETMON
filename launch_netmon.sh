@@ -1,5 +1,5 @@
 #!/bin/bash
-# 🛡️ NETMON PRO v2.1 Launcher - Robust GUI Edition
+# 🛡️ NETMON PRO v2.2 Launcher - Robust GUI Edition
 
 # Get absolute path of the script directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -14,7 +14,7 @@ PASSWORD=$(zenity --password --title="🛡️ NetMon PRO Security Authorization"
 
 if [ $? -eq 0 ] && [ -n "$PASSWORD" ]; then
     # Launch with sudo -S (stdin) and -E (preserve env for GUI)
-    echo "$PASSWORD" | sudo -S -E python3 netmonv2.1.py
+    echo "$PASSWORD" | sudo -S -E python3 netmonv2.2.py
 else
     # User cancelled or empty password
     zenity --error --text="Authorization failed or cancelled. Application cannot start without root privileges." --title="Error"

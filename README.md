@@ -1,6 +1,6 @@
-# 🛡️ NETMON PRO v2.1 - Enterprise Security & Compliance Suite
+# 🛡️ NETMON PRO v2.2 - Enterprise Security & Compliance Suite
 
-**NETMON PRO v2.1** is a high-performance, multi-threaded network security and asset management platform. Designed for enterprise-level visibility, it offers real-time monitoring, security auditing, and compliance reporting in a single dashboard.
+**NETMON PRO v2.2** is a high-performance, multi-threaded network security and asset management platform. Designed for enterprise-level visibility, it offers real-time monitoring, security auditing, and compliance reporting in a single dashboard.
 
 ## 🚀 Features
 
@@ -47,7 +47,7 @@ pip install -r requirements.txt
 ### ⌨️ Terminal Launch
 1. **Launch the Application:**
    ```bash
-   python netmonv2.1.py
+   python netmonv2.2.py
    ```
    *Note: On Linux, running as `sudo` may be required for certain features like raw packet sniffing (ARP monitoring).*
 
