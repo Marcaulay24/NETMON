@@ -20,16 +20,31 @@
 - **Python:** Version 3.13 or higher.
 
 ### 2. Install System Dependencies
-On Linux, ensure the following tools are installed:
+
+#### **🐧 Linux (Debian/Ubuntu)**
+Ensure the following tools are installed via your package manager:
 ```bash
 sudo apt update
 sudo apt install -y nmap python3-scapy
 ```
 
+#### **🪟 Windows**
+For full functionality (packet sniffing and deep scanning) on Windows, follow these steps:
+1.  **Install Nmap:** Download and run the [Nmap Windows Installer](https://nmap.org/download.html#windows).
+2.  **Install Npcap:** During the Nmap installation, ensure **Npcap** is selected. Npcap is required for the Scapy engine to capture raw packets.
+3.  **Python Path:** Ensure Python 3.13+ is added to your system **PATH**.
+
+---
+
 ### 3. Setup Virtual Environment (Recommended)
 ```bash
+# Linux/macOS
 python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+venv\Scripts\activate
 ```
 
 ### 4. Install Python Packages
